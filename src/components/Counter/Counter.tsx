@@ -8,14 +8,23 @@ type CounterPropsType = {
     countEnd: number | null
     increasingCount: () => void
     resetCount: () => void
+    openSettings: () => void
 
 }
-const Counter: FC<CounterPropsType> = ({count, countStart, countEnd, increasingCount, resetCount}) => {
+const Counter: FC<CounterPropsType> = ({count,
+                                           countStart,
+                                           countEnd,
+                                           increasingCount,
+                                           openSettings,
+                                           resetCount}) => {
     const onIncreasingCount = () => {
         increasingCount()
     }
     const onResetCount = () => {
         resetCount()
+    }
+    const onOpenSettings = () => {
+        openSettings()
     }
     const redScreenStyle = count === null
         ? ''
@@ -33,7 +42,7 @@ const Counter: FC<CounterPropsType> = ({count, countStart, countEnd, increasingC
             <div className={style.buttons}>
                 <Button title={'inc'} isDisabled={count! > countEnd! - 1} callBack={onIncreasingCount}/>
                 <Button title={'reset'} isDisabled={count == countStart} callBack={onResetCount}/>
-
+                <Button title={'set'} isDisabled={false} callBack={onOpenSettings}/>
             </div>
         </div>
     );

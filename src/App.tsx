@@ -8,6 +8,14 @@ function App() {
     const [countStart, setCountStart] = useState<number | null>(null)
     const [countEnd, setCountEnd] = useState<number | null>(null)
     const [count, setCounter] = useState<number | null>(null)
+    const [isOpenSettings, setIsOpenSettings] = useState(false)
+
+    useEffect(() => {
+        if (count) {
+            localStorage.setItem('counterValue', JSON.stringify(count))
+        }
+
+    }, [count])
 
     useEffect(() => {
         const localCount = localStorage.getItem('counterValue')
@@ -23,10 +31,15 @@ function App() {
 
     }, [])
 
+    const openSettings = () => {
+        setIsOpenSettings(true)
+    }
+
     const setSettings = (max: number, start: number) => {
         setCountStart(start)
         setCountEnd(max)
         setCounter(start)
+        setIsOpenSettings(false)
     }
     const increasingCount = () => {
 
@@ -37,7 +50,7 @@ function App() {
             setCounter(count! + 1)
             //setIsDisabledInc(true)
         }
-        localStorage.setItem('counterValue', JSON.stringify(count!+1))
+
     }
     const resetCount = () => {
         setCounter(countStart)
@@ -48,11 +61,17 @@ function App() {
     return (
         <div className="App">
             <Settings setSettings={setSettings}/>
-            <Counter count={count}
-                     countStart={countStart}
-                     countEnd={countEnd}
-                     increasingCount={increasingCount}
-                     resetCount={resetCount}/>
+            {!isOpenSettings
+                ? <Counter count={count}
+                           countStart={countStart}
+                           countEnd={countEnd}
+                           increasingCount={increasingCount}
+                           resetCount={resetCount}
+                           openSettings={openSettings}/>
+                : <Settings setSettings={setSettings}/>
+            }
+
+
         </div>
     );
 }

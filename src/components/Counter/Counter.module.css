@@ -34,3 +34,7 @@
     padding: 5px;
     background-color: darkslategrey;
 }
+.error {
+    border: red 2px solid;
+    background-color: rosybrown;
+}
