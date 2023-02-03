@@ -1,35 +1,39 @@
 import style from './Counter.module.css'
 import React, {FC, useState} from 'react';
+import Button from "../Button/Button";
 
 type CounterPropsType = {
-    count: number
-    isDisabledInc: boolean
-    isDisabledReset: boolean
+    count: number | null
+    countStart: number | null
+    countEnd: number | null
     increasingCount: () => void
     resetCount: () => void
 
 }
-const Counter: FC<CounterPropsType> = ({count, increasingCount, resetCount, isDisabledInc, isDisabledReset}) => {
+const Counter: FC<CounterPropsType> = ({count, countStart, countEnd, increasingCount, resetCount}) => {
     const onIncreasingCount = () => {
         increasingCount()
     }
     const onResetCount = () => {
         resetCount()
     }
-    const redScreenStyle = count === 5 ? style.redCount : ''
+    const redScreenStyle = count === null
+        ? ''
+        : count === countEnd
+            ? style.redCount
+            : ''
 
     return (
-        <div className={style.counter}>
+        <div className={style.root}>
             <div className={style.screen}>
-                <span className={redScreenStyle}>{count}</span>
+                <span className={redScreenStyle}>
+                    {count === null ? `Enter values and press 'set'` : count}
+                </span>
             </div>
             <div className={style.buttons}>
-                <button className={style.button} disabled={isDisabledInc} onClick={onIncreasingCount}>
-                    inc
-                </button>
-                <button className={style.button} disabled={isDisabledReset} onClick={onResetCount}>
-                    reset
-                </button>
+                <Button title={'inc'} isDisabled={count! > countEnd! - 1} callBack={onIncreasingCount}/>
+                <Button title={'reset'} isDisabled={count == countStart} callBack={onResetCount}/>
+
             </div>
         </div>
     );
