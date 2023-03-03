@@ -22,8 +22,12 @@ function App() {
         const localStartCount = localStorage.getItem('startValueCounter')
         const localEndCount = localStorage.getItem('maxValueCounter')
         const localState = JSON.parse(localStorage.getItem('counterValue')!)
-        dispatch(changeStartingCounterAC(+localStartCount!, +localEndCount!, +localState.todos.count!))
-    }, [])
+        if (localState !== null && localEndCount !== null && localStartCount !== null) {
+             dispatch(changeStartingCounterAC(+localStartCount, +localEndCount, +localState.todos.count))
+        }
+        //
+
+     },[])
 
     const openSettings = () => {
         //setIsOpenSettings(true)
@@ -31,15 +35,11 @@ function App() {
     }
 
     const setSettings = (max: number, start: number) => {
-        // setCountStart(start)
-        //setCountEnd(max)
-        // setCounter(start)
-        // setIsOpenSettings(false)
         dispatch(changeStartingCounterAC(start, max, start))
         dispatch(changeIsOpenSettingsAC(false))
     }
     const increasingCount = () => {
-        dispatch(changeCounterValueAC())
+            dispatch(changeCounterValueAC())
     }
     const resetCount = () => {
         dispatch(resetCountValueAC())
@@ -56,8 +56,6 @@ function App() {
                            openSettings={openSettings}/>
                 : <Settings setSettings={setSettings}/>
             }
-
-
         </div>
     );
 }

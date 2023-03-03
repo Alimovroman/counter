@@ -14,11 +14,6 @@ export type RootState = ReturnType<typeof reducers>
 const persistedState = loadState()
 export const store = createStore(reducers, persistedState);
 
-// store.subscribe(() => {
-//     saveState({
-//         counter: store.getState().counter
-//     })
-// })
 store.subscribe(throttle(() => {
     saveState({
         todos: store.getState().counter
