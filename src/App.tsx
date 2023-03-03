@@ -17,26 +17,13 @@ function App() {
 
     const {countStart, countEnd, count, isOpenSettings} = useSelector((state: RootState) => state.counter)
     const dispatch = useDispatch<Dispatch>()
-    // useEffect(() => {
-    //     if (count) {
-    //         localStorage.setItem('counterValue', JSON.stringify(count))
-    //     }
-    //
-    // }, [count])
-    //
-    // useEffect(() => {
-    //     const localCount = localStorage.getItem('counterValue')
-    //     const localStartCount = localStorage.getItem('startValueCounter')
-    //     const localEndCount = localStorage.getItem('maxValueCounter')
-    //
-    //     if (localCount && localStartCount && localEndCount) {
-    //         setCounter(JSON.parse(localCount))
-    //         setCountStart(JSON.parse(localStartCount))
-    //         setCountEnd(JSON.parse(localEndCount))
-    //     }
-    //
-    //
-    // }, [])
+
+    useEffect(() => {
+        const localStartCount = localStorage.getItem('startValueCounter')
+        const localEndCount = localStorage.getItem('maxValueCounter')
+        const localState = JSON.parse(localStorage.getItem('counterValue')!)
+        dispatch(changeStartingCounterAC(+localStartCount!, +localEndCount!, +localState.todos.count!))
+    }, [])
 
     const openSettings = () => {
         //setIsOpenSettings(true)
@@ -48,28 +35,14 @@ function App() {
         //setCountEnd(max)
         // setCounter(start)
         // setIsOpenSettings(false)
-        dispatch(changeStartingCounterAC(start, max))
+        dispatch(changeStartingCounterAC(start, max, start))
         dispatch(changeIsOpenSettingsAC(false))
     }
     const increasingCount = () => {
-
-        // if (count !== null && count < 4) {
-            // setCounter(count + 1)
-            // setIsDisabledReset(false)
-            dispatch(changeCounterValueAC())
-        // } else {
-        //     dispatch(changeCounterValueAC())
-            // setCounter(count! + 1)
-            //setIsDisabledInc(true)
-        // }
-        console.log(count)
+        dispatch(changeCounterValueAC())
     }
     const resetCount = () => {
         dispatch(resetCountValueAC())
-        // setCounter(countStart)
-        // localStorage.setItem('counterValue', JSON.stringify(countStart))
-        //setIsDisabledInc(false)
-        //setIsDisabledReset(true)
     }
     return (
         <div className="App">

@@ -1,10 +1,10 @@
-type InitialState = {
+export type InitialStateCounterType = {
     countStart: number | null,
     countEnd: number | null,
     count: number | null,
     isOpenSettings: boolean
 }
-const initialState: InitialState = {
+const initialState: InitialStateCounterType = {
     countStart: null,
     countEnd: null,
     count: null,
@@ -21,7 +21,7 @@ export const counterReducer = (state= initialState, action: ActionType) => {
                 ...state,
                 countStart: action.payload.countStart,
                 countEnd: action.payload.countEnd,
-                count: action.payload.countStart
+                count: action.payload.countValue
             }
         case "CHANGE-IS-OPEN-SETTINGS":
             return {
@@ -44,12 +44,13 @@ export const counterReducer = (state= initialState, action: ActionType) => {
 }
 
 type ChangeStartingCounterACType = ReturnType<typeof changeStartingCounterAC>
-export const changeStartingCounterAC = (countStart: number, countEnd: number) => {
+export const changeStartingCounterAC = (countStart: number, countEnd: number, countValue: number) => {
     return {
         type: 'CHANGE-START-COUNTER',
         payload: {
             countStart,
-            countEnd
+            countEnd,
+            countValue
         }
     } as const
 }
