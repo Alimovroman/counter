@@ -1,3 +1,6 @@
+import {Dispatch} from "redux";
+import {AppThunk, RootState} from "./store";
+
 export type InitialStateCounterType = {
     countStart: number | null,
     countEnd: number | null,
@@ -10,11 +13,11 @@ const initialState: InitialStateCounterType = {
     count: null,
     isOpenSettings: false
 }
-type ActionType = ChangeStartingCounterACType
+export type CounterActionType = ChangeStartingCounterACType
     | ChangeIsOpenSettingsACType
     | ChangeCounterValueACType
     |ResetCountValueACType
-export const counterReducer = (state= initialState, action: ActionType) => {
+export const counterReducer = (state= initialState, action: CounterActionType) => {
     switch (action.type) {
         case "CHANGE-START-COUNTER":
             return {
@@ -58,8 +61,35 @@ export const changeStartingCounterAC = (countStart: number, countEnd: number, co
 type ChangeIsOpenSettingsACType = ReturnType<typeof changeIsOpenSettingsAC>
 export const changeIsOpenSettingsAC = (isOpen: boolean) => ({type: 'CHANGE-IS-OPEN-SETTINGS', payload: {isOpen}}as const)
 
-type ChangeCounterValueACType = ReturnType<typeof changeCounterValueAC>
-export const changeCounterValueAC = () => ({type: 'CHANGE-COUNTER-VALUE'} as const)
+type ChangeCounterValueACType = ReturnType<typeof incCounterValueAC>
+export const incCounterValueAC = () => ({type: 'CHANGE-COUNTER-VALUE'} as const)
 
 type ResetCountValueACType = ReturnType<typeof resetCountValueAC>
 export const resetCountValueAC = () => ({type: 'RESET-COUNT-VALUE'} as const)
+
+export const getCountLocalStorage = (): AppThunk => (dispatch) => {
+    const localStartCount = localStorage.getItem('startValueCounter')
+    const localEndCount = localStorage.getItem('maxValueCounter')
+    const localState = JSON.parse(localStorage.getItem('counterValue')!)
+
+    if (localState !== null && localEndCount !== null && localStartCount !== null) {
+
+        dispatch(changeStartingCounterAC(+localStartCount, +localEndCount, +localState))
+    }
+}
+
+export const incValueCount = (count: number): AppThunk => (dispatch) => {
+    localStorage.setItem('counterValue', JSON.stringify(count+1))
+    dispatch(incCounterValueAC())
+}
+export const setSettingsCount = (startValue: number, maxValue: number): AppThunk => (dispatch) => {
+    localStorage.setItem('counterValue', JSON.stringify(startValue))
+    localStorage.setItem('maxValueCounter', JSON.stringify(maxValue))
+    localStorage.setItem('startValueCounter', JSON.stringify(startValue))
+    dispatch(changeStartingCounterAC(startValue, maxValue, startValue))
+}
+export const resetCountValue = (): AppThunk => (dispatch, getState: () => RootState) => {
+    const startValue = getState().counter.countStart
+    localStorage.setItem('counterValue', JSON.stringify(startValue))
+    dispatch(resetCountValueAC())
+}

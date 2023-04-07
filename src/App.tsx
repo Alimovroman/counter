@@ -4,27 +4,22 @@ import './App.css';
 import Counter from "./components/Counter/Counter";
 import Settings from "./components/Settings/Settings";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "./store/store";
-import {Dispatch} from "redux";
+import {RootState, useAppDispatch} from "./store/store";
 import {
-    changeCounterValueAC,
+    incCounterValueAC,
     changeIsOpenSettingsAC,
-    changeStartingCounterAC,
-    resetCountValueAC
+    changeStartingCounterAC, getCountLocalStorage,
+    resetCountValueAC, incValueCount, setSettingsCount, resetCountValue
 } from "./store/counter-reducer";
+import {Dispatch} from "redux";
 
 function App() {
 
     const {countStart, countEnd, count, isOpenSettings} = useSelector((state: RootState) => state.counter)
-    const dispatch = useDispatch<Dispatch>()
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
-        const localStartCount = localStorage.getItem('startValueCounter')
-        const localEndCount = localStorage.getItem('maxValueCounter')
-        const localState = JSON.parse(localStorage.getItem('counterValue')!)
-        if (localState !== null && localEndCount !== null && localStartCount !== null) {
-             dispatch(changeStartingCounterAC(+localStartCount, +localEndCount, +localState.todos.count))
-        }
+        dispatch(getCountLocalStorage())
         //
 
      },[])
@@ -35,14 +30,15 @@ function App() {
     }
 
     const setSettings = (max: number, start: number) => {
-        dispatch(changeStartingCounterAC(start, max, start))
+        // dispatch(changeStartingCounterAC(start, max, start))
+        dispatch(setSettingsCount(start, max))
         dispatch(changeIsOpenSettingsAC(false))
     }
     const increasingCount = () => {
-            dispatch(changeCounterValueAC())
+          count && dispatch(incValueCount(count))
     }
     const resetCount = () => {
-        dispatch(resetCountValueAC())
+        dispatch(resetCountValue())
     }
     return (
         <div className="App">

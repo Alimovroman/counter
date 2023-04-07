@@ -18,12 +18,6 @@ const Settings: FC<SettingsPropsType> = (props) => {
         setStartValue(e.currentTarget.value)
     }
 
-    useEffect(() => {
-        if (maxValue && startValue) {
-            localStorage.setItem('maxValueCounter', maxValue)
-            localStorage.setItem('startValueCounter', startValue)
-        }
-    },[maxValue, startValue])
     const setSettings = () => {
         props.setSettings(+maxValue, +startValue)
     }
